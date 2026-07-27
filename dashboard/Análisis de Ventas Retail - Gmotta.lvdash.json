@@ -1,0 +1,283 @@
+{
+  "datasets": [
+    {
+      "name": "ventas_por_segmento",
+      "displayName": "Ventas por segmento de cliente",
+      "queryLines": [
+        "SELECT c.segmento, ROUND(SUM(f.monto_total), 2) AS ventas_totales FROM ventas_retail_gmotta.gold.fact_ventas f JOIN ventas_retail_gmotta.gold.dim_cliente c ON f.customer_key = c.customer_key GROUP BY c.segmento ORDER BY ventas_totales DESC"
+      ]
+    },
+    {
+      "name": "ventas_por_canal",
+      "displayName": "Ventas por canal de venta",
+      "queryLines": [
+        "SELECT f.canal_venta, ROUND(SUM(f.monto_total), 2) AS ventas_totales FROM ventas_retail_gmotta.gold.fact_ventas f GROUP BY f.canal_venta ORDER BY ventas_totales DESC"
+      ]
+    },
+    {
+      "name": "ticket_promedio_pedido",
+      "displayName": "Ticket promedio por pedido",
+      "queryLines": [
+        "WITH pedido_totales AS (SELECT order_id, SUM(monto_total) AS monto_pedido FROM ventas_retail_gmotta.gold.fact_ventas GROUP BY order_id) SELECT ROUND(AVG(monto_pedido), 2) AS ticket_promedio_por_pedido FROM pedido_totales"
+      ]
+    },
+    {
+      "name": "top_10_productos",
+      "displayName": "Top 10 productos por cantidad vendida",
+      "queryLines": [
+        "SELECT pr.nombre_producto, pr.categoria, SUM(f.cantidad) AS unidades_vendidas FROM ventas_retail_gmotta.gold.fact_ventas f JOIN ventas_retail_gmotta.gold.dim_producto pr ON f.product_key = pr.product_key GROUP BY pr.nombre_producto, pr.categoria ORDER BY unidades_vendidas DESC LIMIT 10"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "main",
+      "displayName": "Ventas Retail - Gmotta",
+      "layout": [
+        {
+          "widget": {
+            "name": "ticket_promedio",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ticket_promedio_pedido",
+                  "fields": [
+                    {
+                      "name": "ticket_promedio_por_pedido",
+                      "expression": "`ticket_promedio_por_pedido`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Ticket Promedio por Pedido",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "ticket_promedio_por_pedido",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 4,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "ventas_segmento",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ventas_por_segmento",
+                  "fields": [
+                    {
+                      "name": "segmento",
+                      "expression": "`segmento`"
+                    },
+                    {
+                      "name": "sum(ventas_totales)",
+                      "expression": "SUM(`ventas_totales`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Ventas por Segmento de Cliente",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "segmento",
+                  "displayName": "Segmento",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(ventas_totales)",
+                  "displayName": "Ventas Totales",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "segmento",
+                  "displayName": "Segmento",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 8,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "ventas_canal",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ventas_por_canal",
+                  "fields": [
+                    {
+                      "name": "canal_venta",
+                      "expression": "`canal_venta`"
+                    },
+                    {
+                      "name": "sum(ventas_totales)",
+                      "expression": "SUM(`ventas_totales`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Ventas por Canal de Venta",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "canal_venta",
+                  "displayName": "Canal Venta",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(ventas_totales)",
+                  "displayName": "Ventas Totales",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "canal_venta",
+                  "displayName": "canal_venta",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "top_productos",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "top_10_productos",
+                  "fields": [
+                    {
+                      "name": "nombre_producto",
+                      "expression": "`nombre_producto`"
+                    },
+                    {
+                      "name": "sum(unidades_vendidas)",
+                      "expression": "SUM(`unidades_vendidas`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Top 10 Productos por Cantidad Vendida",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "nombre_producto",
+                  "displayName": "Nombre del producto",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(unidades_vendidas)",
+                  "displayName": "Unidades Vendidas",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "nombre_producto",
+                  "displayName": "nombre_producto",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 5,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
