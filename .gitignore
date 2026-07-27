@@ -1,0 +1,7 @@
+# Documentacion / insumos de uso personal - NO son parte del entregable del curso
+/Instrucciones.html
+/CLAUDE.md
+/local_notes/
+
+# Estado local de Databricks Asset Bundles (si alguna vez se valida con el CLI localmente)
+.databricks/

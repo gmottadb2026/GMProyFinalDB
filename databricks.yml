@@ -1,0 +1,13 @@
+bundle:
+  name: ventas_retail_gmotta
+
+include:
+  - resources/*.yml
+
+workspace:
+  host: https://dbc-361e0899-e8cd.cloud.databricks.com
+
+targets:
+  dev:
+    mode: development
+    default: true

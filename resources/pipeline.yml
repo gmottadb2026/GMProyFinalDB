@@ -1,0 +1,19 @@
+resources:
+  pipelines:
+    ventas_retail_pipeline:
+      name: ventas_retail_gmotta_pipeline
+      catalog: ventas_retail_gmotta
+      # Esquema por defecto exigido por Unity Catalog a nivel de pipeline. Cada tabla se publica
+      # igualmente en su propio esquema via nombre calificado (bronze.x / silver.x / gold.x);
+      # este valor solo actua como red de seguridad si alguna sentencia futura no calificara
+      # el esquema destino, para que caiga en bronze (staging) y no contamine silver/gold.
+      schema: bronze
+      serverless: true
+      continuous: false
+      libraries:
+        - file:
+            path: ../src/transformations/01_bronze.sql
+        - file:
+            path: ../src/transformations/02_silver.sql
+        - file:
+            path: ../src/transformations/03_gold.sql

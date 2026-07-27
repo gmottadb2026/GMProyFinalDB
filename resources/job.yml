@@ -1,0 +1,18 @@
+resources:
+  jobs:
+    ventas_retail_job:
+      name: ventas_retail_gmotta_job
+      tasks:
+        # Idempotente: crea catalogo/esquemas/volume si no existen. Se corre a mano una vez
+        # ANTES del primer "Deploy" del bundle (el catalogo debe existir antes de crear el
+        # Pipeline en Unity Catalog), y luego se reutiliza aqui para que cada corrida del
+        # Job siga siendo autosuficiente.
+        - task_key: setup
+          notebook_task:
+            notebook_path: ../setup/00_setup.sql
+
+        - task_key: run_pipeline
+          depends_on:
+            - task_key: setup
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.ventas_retail_pipeline.id}
