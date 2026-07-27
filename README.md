@@ -85,10 +85,10 @@ cubriendo las 3 severidades exigidas (`warn`, `drop`, `fail`). Tabla completa en
 
 | # | Dataset | Consulta (resumen) | Visualización |
 |---|---|---|---|
-| 1 | Ventas por segmento de cliente | `fact_ventas` + `dim_cliente`, `GROUP BY segmento` | Pie/Donut |
-| 2 | Ventas por canal de venta | `fact_ventas`, `GROUP BY canal_venta` | Bar chart vertical |
-| 3 | Ticket promedio por pedido | `AVG` del monto agregado por `order_id` | Counter |
-| 4 | Top 10 productos por cantidad vendida | `fact_ventas` + `dim_producto`, `ORDER BY unidades DESC LIMIT 10` | Bar chart horizontal |
+| 1 | Ticket promedio por pedido | `AVG` del monto agregado por `order_id` | Counter |
+| 2 | Ventas por segmento de cliente | `fact_ventas` + `dim_cliente`, `GROUP BY segmento` | Bar chart vertical |
+| 3 | Ventas por canal de venta | `fact_ventas`, `GROUP BY canal_venta` | Bar chart vertical |
+| 4 | Top 10 productos por cantidad vendida | `fact_ventas` + `dim_producto`, `ORDER BY unidades DESC LIMIT 10` | Bar chart vertical |
 
 El dashboard se construyó directamente en la UI de Databricks (no reconstruyendo el `.lvdash.json`
 a mano) y se guardó en `dashboard/` mediante "Commit to Git".
