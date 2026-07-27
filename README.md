@@ -93,19 +93,6 @@ cubriendo las 3 severidades exigidas (`warn`, `drop`, `fail`). Tabla completa en
 El dashboard se construyó directamente en la UI de Databricks (no reconstruyendo el `.lvdash.json`
 a mano) y se guardó en `dashboard/` mediante "Commit to Git".
 
-## Cómo desplegar (resumen)
-
-100% vía interfaz web de Databricks, sin CLI ni tokens:
-
-1. Crear un **Git Folder** en el workspace apuntando a este repositorio.
-2. Ejecutar `setup/00_setup.sql` con **Run All**, a mano, una vez (el catálogo debe existir antes
-   del primer deploy).
-3. Subir los 12 archivos de `data/` al Volume `ventas_retail_gmotta.landing.raw_data` (una
-   subcarpeta por entidad) vía Catalog Explorer.
-4. Abrir `databricks.yml` dentro del Git Folder → panel **Deployments** → **Deploy**.
-5. Panel **Bundle resources** → Job `ventas_retail_gmotta_job` → **Run now**.
-6. Construir el dashboard en la UI sobre las tablas Gold y hacer **Commit to Git**.
-
 ## Repositorio
 
 <https://github.com/gmottadb2026/GMProyFinalDB>
